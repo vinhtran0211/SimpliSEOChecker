@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model HomeModel
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <form asp-controller="Home" asp-action="GetRank" method="post" onsubmit="disableControl(event)" id="form">
+        <label asp-for="Keyword">Keywords:</label>
+        <input type="text" asp-for="Keyword" id="keyword" />
+        <br />
+        <span asp-validation-for="Keyword" class="text-danger"></span><br />
+
+        <label asp-for="UrlToFind">URL to Find:</label>
+        <input type="text" asp-for="UrlToFind" id="urlToFind" />
+        <br />
+        <span asp-validation-for="UrlToFind" class="text-danger"></span><br />
+
+        <button type="submit" id="submitButton">Find Rank</button>
+    </form>
+
+    @if (ViewBag.IsSubmitted != null && ViewBag.IsSubmitted)
+    {
+        <p>
+            The URL "@ViewBag.UrlToFind" was searched for the keyword "@ViewBag.Keyword".
+        </p>
+
+        @if (ViewBag.GoogleRank > 0)
+        {
+            <p>Appear on Google at ranks: @ViewBag.GoogleRank</p>
+        }
+        else
+        {
+            <p>Not found in the Google search results.</p>
+        }
+
+        @if (ViewBag.BingRank > 0)
+        {
+            <p>Appear on Bing at ranks: @ViewBag.BingRank</p>
+        }
+        else
+        {
+            <p>Not found in the Bing search results.</p>
+        }
+    }
+
+
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <p class="text-danger">@ViewBag.ErrorMessage</p>
+    }
+
+</div>
+
+<script>
+    function disableControl(event) {
+        event.preventDefault();
+        const isValid = $("#form").valid();
+        if(!isValid) return;
+        form.submit();
+        let but = document.getElementById('submitButton');
+        but.disabled = true;
+        but.textContent = "Submitting...";
+        document.getElementById('keyword').readOnly = true;
+        document.getElementById('urlToFind').readOnly = true;
+    }
+</script>
